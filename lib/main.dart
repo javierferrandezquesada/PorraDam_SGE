@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ui_estructura_espacios_flutter/features/bienvenida/pantalla_bienvenida.dart';
-import 'package:ui_estructura_espacios_flutter/features/principal/pantalla_principal.dart';
+import 'features/bienvenida/pantalla_bienvenida.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,12 +13,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'PORRA DAM',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Color.fromARGB(255,85,221,102))),
-      home: Scaffold(
-        body: PantallaPrincipal()
-
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 85, 221, 102),
         ),
-      );
+      ),
+      home: const PantallaBienvenida(),
+    );
   }
 }
-

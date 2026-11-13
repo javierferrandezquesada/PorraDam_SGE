@@ -1,117 +1,170 @@
 import 'package:flutter/material.dart';
+import '../principal/pantalla_principal.dart';
 
-class PantallaBienvenida extends StatelessWidget {
+class PantallaBienvenida extends StatefulWidget {
   const PantallaBienvenida({super.key});
 
   @override
+  State<PantallaBienvenida> createState() => _PantallaBienvenidaState();
+}
+
+class _PantallaBienvenidaState extends State<PantallaBienvenida> {
+  final TextEditingController _aliasController = TextEditingController();
+  final TextEditingController _grupoController = TextEditingController();
+
+  @override
+  void dispose() {
+    _aliasController.dispose();
+    _grupoController.dispose();
+    super.dispose();
+  }
+
+  void _entrarEnLaPorra() {
+    final String alias = _aliasController.text.trim().isEmpty
+        ? 'mcoma'
+        : _aliasController.text.trim();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PantallaPrincipal(alias: alias),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Image.asset('assets/images/fondo_pantalla_hd.webp', fit: BoxFit.cover),
-
-        SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 180),
-
-                Row(
-                  children: [
-                    Text(
-                      "Porra ",
-                      style: TextStyle(
-                        fontFamily: 'Boldonse',
-                        fontSize: 38,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+    return Scaffold(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            'assets/images/fondo_pantalla_hd.webp',
+            fit: BoxFit.cover,
+          ),
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 150),
+                  const Row(
+                    children: [
+                      Text(
+                        'Porra ',
+                        style: TextStyle(
+                          fontFamily: 'Boldonse',
+                          fontSize: 38,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "DAM",
-                      style: TextStyle(
-                        fontFamily: 'Boldonse',
-                        fontSize: 38,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFFA2E8DD),
+                      Text(
+                        'DAM',
+                        style: TextStyle(
+                          fontFamily: 'Boldonse',
+                          fontSize: 38,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFA2E8DD),
+                        ),
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Pronostica los partidos de cada jornada\ny compite con tu clase.\n¿Quién acertará más?',
+                    style: TextStyle(
+                      fontFamily: 'HostGrotesk',
+                      fontSize: 14,
+                      color: Colors.white,
                     ),
-                  ],
-                ),
-
-                SizedBox(height: 10),
-                Text(
-                  "Pronostica los partidos de cada jornada\ny compite con tu clase.\n¿Quién acertará más?",
-                  style: TextStyle(
-                    fontFamily: 'HostGrotesk',
-                    fontSize: 14,
+                  ),
+                  const SizedBox(height: 20),
+                  Card(
                     color: Colors.white,
-                  ),
-                ),
-
-                SizedBox(height: 20),
-
-                Card(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "TU ALIAS",
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 5),
-                        TextField(
-                          decoration: InputDecoration(
-                            hintText: "Escribe tu nombre o alias",
-                            prefixIcon: Icon(Icons.person_outline),
-                            border: OutlineInputBorder(),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'TU ALIAS',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-
-                        SizedBox(height: 15),
-                        Text(
-                          "CÓDIGO DEL GRUPO",
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 5),
-                        TextField(
-                          decoration: InputDecoration(
-                            hintText: "p. ej. 1A - DAM - 2026",
-                            prefixIcon: Icon(Icons.people_outline),
-                            border: OutlineInputBorder(),
+                          const SizedBox(height: 6),
+                          TextField(
+                            controller: _aliasController,
+                            decoration: InputDecoration(
+                              hintText: 'Escribe tu nombre o alias',
+                              prefixIcon: const Icon(Icons.person_outline),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
                           ),
-                        ),
-
-                        SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            foregroundColor: Colors.white,
+                          const SizedBox(height: 16),
+                          const Text(
+                            'CÓDIGO DEL GRUPO',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Entrar en la porra"),
-                              SizedBox(width: 8),
-                              Icon(Icons.arrow_forward),
-                            ],
+                          const SizedBox(height: 6),
+                          TextField(
+                            controller: _grupoController,
+                            decoration: InputDecoration(
+                              hintText: 'p. ej. 1A - DAM - 2026',
+                              prefixIcon: const Icon(Icons.people_outline),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 48,
+                            child: ElevatedButton(
+                              onPressed: _entrarEnLaPorra,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black,
+                                foregroundColor: Colors.white,
+                                shape: const StadiumBorder(),
+                              ),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Entrar en la porra',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Icon(Icons.arrow_forward),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
