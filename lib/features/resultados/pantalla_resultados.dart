@@ -1,67 +1,8 @@
 import 'package:flutter/material.dart';
-import 'resultado_modelo.dart';
 import 'tarjeta_resultado.dart';
 
 class PantallaResultados extends StatelessWidget {
   const PantallaResultados({super.key});
-
-  static const List<ResultadoModelo> _resultados = [
-    ResultadoModelo(
-      equipoLocal: 'Atlético Madrid',
-      escudoLocal: 'assets/images/escudos/escudo_atletico.png',
-      equipoVisitante: 'Real Madrid',
-      escudoVisitante: 'assets/images/escudos/escudo_madrid.png',
-      golesOficialLocal: 2,
-      golesOficialVisitante: 1,
-      golesPorraLocal: 2,
-      golesPorraVisitante: 1,
-      puntos: 8,
-    ),
-    ResultadoModelo(
-      equipoLocal: 'FC Barcelona',
-      escudoLocal: 'assets/images/escudos/escudo_barcelona.png',
-      equipoVisitante: 'Villarreal CF',
-      escudoVisitante: 'assets/images/escudos/escudo_villarreal.png',
-      golesOficialLocal: 3,
-      golesOficialVisitante: 0,
-      golesPorraLocal: 2,
-      golesPorraVisitante: 0,
-      puntos: 4,
-    ),
-    ResultadoModelo(
-      equipoLocal: 'Sevilla FC',
-      escudoLocal: 'assets/images/escudos/escudo_sevilla.png',
-      equipoVisitante: 'Real Sociedad',
-      escudoVisitante: 'assets/images/escudos/escudo_realsociedad.png',
-      golesOficialLocal: 1,
-      golesOficialVisitante: 1,
-      golesPorraLocal: 1,
-      golesPorraVisitante: 0,
-      puntos: 2,
-    ),
-    ResultadoModelo(
-      equipoLocal: 'Betis',
-      escudoLocal: 'assets/images/escudos/escudo_betis.png',
-      equipoVisitante: 'Valencia CF',
-      escudoVisitante: 'assets/images/escudos/escudo_valencia.png',
-      golesOficialLocal: 2,
-      golesOficialVisitante: 1,
-      golesPorraLocal: 1,
-      golesPorraVisitante: 1,
-      puntos: 0,
-    ),
-    ResultadoModelo(
-      equipoLocal: 'Athletic Club',
-      escudoLocal: 'assets/images/escudos/escudo_athletic.png',
-      equipoVisitante: 'Celta de Vigo',
-      escudoVisitante: 'assets/images/escudos/escudo_celta.png',
-      golesOficialLocal: 1,
-      golesOficialVisitante: 0,
-      golesPorraLocal: 1,
-      golesPorraVisitante: 0,
-      puntos: 8,
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +75,7 @@ class PantallaResultados extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // Tarjeta blanca con resultados y resumen inferior
+          // Tarjeta blanca con los 5 partidos y resumen inferior
           Card(
             color: Colors.white,
             elevation: 4,
@@ -146,15 +87,65 @@ class PantallaResultados extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  for (int i = 0; i < _resultados.length; i++) ...[
-                    TarjetaResultado(resultado: _resultados[i]),
-                    if (i < _resultados.length - 1)
-                      const Divider(
-                        height: 12,
-                        thickness: 1,
-                        color: Color(0xFFF1F5F9),
-                      ),
-                  ],
+                  const TarjetaResultado(
+                    equipoLocal: 'Atlético Madrid',
+                    escudoLocal: 'assets/images/escudos/escudo_atletico.png',
+                    equipoVisitante: 'Real Madrid',
+                    escudoVisitante: 'assets/images/escudos/escudo_madrid.png',
+                    golesOficialLocal: 2,
+                    golesOficialVisitante: 1,
+                    golesPorraLocal: 2,
+                    golesPorraVisitante: 1,
+                    puntos: 8,
+                  ),
+                  const Divider(height: 12, thickness: 1, color: Color(0xFFF1F5F9)),
+                  const TarjetaResultado(
+                    equipoLocal: 'FC Barcelona',
+                    escudoLocal: 'assets/images/escudos/escudo_barcelona.png',
+                    equipoVisitante: 'Villarreal CF',
+                    escudoVisitante: 'assets/images/escudos/escudo_villarreal.png',
+                    golesOficialLocal: 3,
+                    golesOficialVisitante: 0,
+                    golesPorraLocal: 2,
+                    golesPorraVisitante: 0,
+                    puntos: 4,
+                  ),
+                  const Divider(height: 12, thickness: 1, color: Color(0xFFF1F5F9)),
+                  const TarjetaResultado(
+                    equipoLocal: 'Sevilla FC',
+                    escudoLocal: 'assets/images/escudos/escudo_sevilla.png',
+                    equipoVisitante: 'Real Sociedad',
+                    escudoVisitante: 'assets/images/escudos/escudo_realsociedad.png',
+                    golesOficialLocal: 1,
+                    golesOficialVisitante: 1,
+                    golesPorraLocal: 1,
+                    golesPorraVisitante: 0,
+                    puntos: 2,
+                  ),
+                  const Divider(height: 12, thickness: 1, color: Color(0xFFF1F5F9)),
+                  const TarjetaResultado(
+                    equipoLocal: 'Betis',
+                    escudoLocal: 'assets/images/escudos/escudo_betis.png',
+                    equipoVisitante: 'Valencia CF',
+                    escudoVisitante: 'assets/images/escudos/escudo_valencia.png',
+                    golesOficialLocal: 2,
+                    golesOficialVisitante: 1,
+                    golesPorraLocal: 1,
+                    golesPorraVisitante: 1,
+                    puntos: 0,
+                  ),
+                  const Divider(height: 12, thickness: 1, color: Color(0xFFF1F5F9)),
+                  const TarjetaResultado(
+                    equipoLocal: 'Athletic Club',
+                    escudoLocal: 'assets/images/escudos/escudo_athletic.png',
+                    equipoVisitante: 'Celta de Vigo',
+                    escudoVisitante: 'assets/images/escudos/escudo_celta.png',
+                    golesOficialLocal: 1,
+                    golesOficialVisitante: 0,
+                    golesPorraLocal: 1,
+                    golesPorraVisitante: 0,
+                    puntos: 8,
+                  ),
 
                   const SizedBox(height: 16),
 

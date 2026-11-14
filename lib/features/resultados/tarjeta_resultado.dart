@@ -1,28 +1,43 @@
 import 'package:flutter/material.dart';
-import 'resultado_modelo.dart';
 
 class TarjetaResultado extends StatelessWidget {
-  final ResultadoModelo resultado;
+  final String equipoLocal;
+  final String escudoLocal;
+  final String equipoVisitante;
+  final String escudoVisitante;
+  final int golesOficialLocal;
+  final int golesOficialVisitante;
+  final int golesPorraLocal;
+  final int golesPorraVisitante;
+  final int puntos;
 
   const TarjetaResultado({
     super.key,
-    required this.resultado,
+    required this.equipoLocal,
+    required this.escudoLocal,
+    required this.equipoVisitante,
+    required this.escudoVisitante,
+    required this.golesOficialLocal,
+    required this.golesOficialVisitante,
+    required this.golesPorraLocal,
+    required this.golesPorraVisitante,
+    required this.puntos,
   });
 
   Color _colorFondoPuntos() {
-    if (resultado.puntos >= 8) {
-      return const Color(0xFFD1FAE5); // Verde menta (pleno)
-    } else if (resultado.puntos > 0) {
-      return const Color(0xFFE0F2FE); // Azul suave (acierto parcial)
+    if (puntos >= 8) {
+      return const Color(0xFFD1FAE5);
+    } else if (puntos > 0) {
+      return const Color(0xFFE0F2FE);
     } else {
-      return const Color(0xFFFEE2E2); // Rojo suave (fallo)
+      return const Color(0xFFFEE2E2);
     }
   }
 
   Color _colorTextoPuntos() {
-    if (resultado.puntos >= 8) {
+    if (puntos >= 8) {
       return const Color(0xFF065F46);
-    } else if (resultado.puntos > 0) {
+    } else if (puntos > 0) {
       return const Color(0xFF0369A1);
     } else {
       return const Color(0xFFB91C1C);
@@ -30,9 +45,9 @@ class TarjetaResultado extends StatelessWidget {
   }
 
   Color _colorTextoPorra() {
-    if (resultado.puntos >= 4) {
+    if (puntos >= 4) {
       return const Color(0xFF16A34A);
-    } else if (resultado.puntos > 0) {
+    } else if (puntos > 0) {
       return const Color(0xFF64748B);
     } else {
       return const Color(0xFFDC2626);
@@ -41,8 +56,7 @@ class TarjetaResultado extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String textoPuntos =
-    resultado.puntos > 0 ? '+${resultado.puntos}' : '0';
+    final String textoPuntos = puntos > 0 ? '+$puntos' : '0';
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -56,16 +70,16 @@ class TarjetaResultado extends StatelessWidget {
                 Row(
                   children: [
                     Image.asset(
-                      resultado.escudoLocal,
+                      escudoLocal,
                       width: 22,
                       height: 22,
                       fit: BoxFit.contain,
-                      semanticLabel: 'Escudo de ${resultado.equipoLocal}',
+                      semanticLabel: 'Escudo de $equipoLocal',
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        resultado.equipoLocal,
+                        equipoLocal,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 14,
@@ -80,16 +94,16 @@ class TarjetaResultado extends StatelessWidget {
                 Row(
                   children: [
                     Image.asset(
-                      resultado.escudoVisitante,
+                      escudoVisitante,
                       width: 22,
                       height: 22,
                       fit: BoxFit.contain,
-                      semanticLabel: 'Escudo de ${resultado.equipoVisitante}',
+                      semanticLabel: 'Escudo de $equipoVisitante',
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        resultado.equipoVisitante,
+                        equipoVisitante,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 14,
@@ -104,7 +118,7 @@ class TarjetaResultado extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 30),
                   child: Text(
-                    'Tu porra: ${resultado.golesPorraLocal} - ${resultado.golesPorraVisitante}',
+                    'Tu porra: $golesPorraLocal - $golesPorraVisitante',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -120,7 +134,7 @@ class TarjetaResultado extends StatelessWidget {
           Column(
             children: [
               Text(
-                '${resultado.golesOficialLocal}',
+                '$golesOficialLocal',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -129,7 +143,7 @@ class TarjetaResultado extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '${resultado.golesOficialVisitante}',
+                '$golesOficialVisitante',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
