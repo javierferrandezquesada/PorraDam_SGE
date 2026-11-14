@@ -21,7 +21,7 @@ class _PantallaBienvenidaState extends State<PantallaBienvenida> {
 
   void _entrarEnLaPorra() {
     final String alias = _aliasController.text.trim().isEmpty
-        ? 'mcoma'
+        ? 'Sin Usuario'
         : _aliasController.text.trim();
 
     Navigator.push(

@@ -30,7 +30,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     final List<Widget> pantallas = [
       PantallaJornadas(alias: widget.alias),
       const PantallaResultados(),
-      const PantallaClasificacion(),
+      PantallaClasificacion(alias: widget.alias),
       const PantallaPerfil(),
     ];
 
