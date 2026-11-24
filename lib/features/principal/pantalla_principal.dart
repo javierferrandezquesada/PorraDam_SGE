@@ -1,49 +1,38 @@
 import 'package:flutter/material.dart';
-import '../clasificacion/pantalla_clasificacion.dart';
-import '../jornada/pantalla_jornadas.dart';
-import '../perfil/pantalla_perfil.dart';
-import '../resultados/pantalla_resultados.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../clasificacion/providers/puntos_provider.dart';
 
-class PantallaPrincipal extends StatefulWidget {
-  final String alias;
+class PantallaPrincipal extends ConsumerWidget {
+  final Widget child;
 
   const PantallaPrincipal({
     super.key,
-    this.alias = 'mcoma',
+    required this.child,
   });
 
-  @override
-  State<PantallaPrincipal> createState() => _PantallaPrincipalState();
-}
-
-class _PantallaPrincipalState extends State<PantallaPrincipal> {
-  int _indiceSeleccionado = 0;
-
-  void _cambiar(int index) {
-    setState(() {
-      _indiceSeleccionado = index;
-    });
-  }
+  static const List<String> _rutas = [
+    '/jornadas',
+    '/resultados',
+    '/clasificacion',
+    '/equipos',
+    '/perfil',
+  ];
 
   @override
-  Widget build(BuildContext context) {
-    final List<Widget> pantallas = [
-      PantallaJornadas(alias: widget.alias),
-      const PantallaResultados(),
-      PantallaClasificacion(alias: widget.alias),
-      const PantallaPerfil(),
-    ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final int puntosTotales = ref.watch(puntosTotalesProvider);
+    final String rutaActual = GoRouterState.of(context).uri.path;
+    final int indiceEncontrado = _rutas.indexWhere(rutaActual.startsWith);
+    final int indiceSeleccionado = indiceEncontrado < 0 ? 0 : indiceEncontrado;
 
     return Stack(
       fit: StackFit.expand,
       children: [
-        // 1. Imagen de fondo del estadio
         Image.asset(
           'assets/images/fondo_pantalla_hd.webp',
           fit: BoxFit.cover,
         ),
-
-        // 2. Degradado oscuro para garantizar la lectura de los textos blancos
         const DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -56,8 +45,6 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
             ),
           ),
         ),
-
-        // 3. Scaffold único compartido por las 4 pestañas
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
@@ -102,9 +89,9 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                   color: const Color(0xFFD1FAE5),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Text(
-                  '38 pts',
-                  style: TextStyle(
+                child: Text(
+                  '$puntosTotales pts',
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF065F46),
@@ -113,14 +100,16 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
               ),
             ],
           ),
-          body: pantallas[_indiceSeleccionado],
+          body: child,
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.white,
             selectedItemColor: const Color(0xFF10B981),
             unselectedItemColor: const Color(0xFF64748B),
-            currentIndex: _indiceSeleccionado,
-            onTap: _cambiar,
+            selectedFontSize: 11,
+            unselectedFontSize: 11,
+            currentIndex: indiceSeleccionado,
+            onTap: (i) => context.go(_rutas[i]),
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.calendar_month),
@@ -133,6 +122,10 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.leaderboard),
                 label: 'Clasificación',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.shield_outlined),
+                label: 'Equipos',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),

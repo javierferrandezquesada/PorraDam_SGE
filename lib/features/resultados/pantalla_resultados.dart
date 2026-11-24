@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../clasificacion/providers/puntos_provider.dart';
+import '../clasificacion/puntuacion.dart';
+import '../jornada/models/partido.dart';
+import '../jornada/models/pronostico.dart';
+import '../jornada/providers/pronosticos_provider.dart';
 
-class PantallaResultados extends StatelessWidget {
+class PantallaResultados extends ConsumerWidget {
   const PantallaResultados({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final List<Partido> partidosJugados = ref.watch(partidosJugadosProvider);
+    final Map<int, Pronostico> pronosticos = ref.watch(pronosticosProvider);
+    final int totalPuntos = ref.watch(puntosTotalesProvider);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Cabecera con título y selector visual estático de jornada
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -49,158 +58,112 @@ class PantallaResultados extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Jornada 1',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E293B),
-                      ),
-                    ),
-                    SizedBox(width: 4),
-                    Icon(
-                      Icons.keyboard_arrow_down,
-                      size: 16,
-                      color: Color(0xFF475569),
-                    ),
-                  ],
+                child: const Text(
+                  'Jugados',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1E293B),
+                  ),
                 ),
               ),
             ],
           ),
-
           const SizedBox(height: 16),
+          Expanded(
+            child: Card(
+              color: Colors.white,
+              elevation: 4,
+              margin: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: partidosJugados.length,
+                        itemBuilder: (context, i) {
+                          final partido = partidosJugados[i];
+                          final pronostico = pronosticos[partido.id];
+                          final int pts = pronostico != null
+                              ? puntosDe(pronostico, partido)
+                              : 0;
 
-          // Tarjeta blanca con los 5 partidos y resumen inferior
-          Card(
-            color: Colors.white,
-            elevation: 4,
-            margin: EdgeInsets.zero,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  const _TarjetaResultado(
-                    equipoLocal: 'Atlético Madrid',
-                    escudoLocal: 'assets/images/escudos/escudo_atletico.png',
-                    equipoVisitante: 'Real Madrid',
-                    escudoVisitante: 'assets/images/escudos/escudo_madrid.png',
-                    golesOficialLocal: 2,
-                    golesOficialVisitante: 1,
-                    golesPorraLocal: 2,
-                    golesPorraVisitante: 1,
-                    puntos: 8,
-                  ),
-                  const Divider(height: 12, thickness: 1, color: Color(0xFFF1F5F9)),
-                  const _TarjetaResultado(
-                    equipoLocal: 'FC Barcelona',
-                    escudoLocal: 'assets/images/escudos/escudo_barcelona.png',
-                    equipoVisitante: 'Villarreal CF',
-                    escudoVisitante: 'assets/images/escudos/escudo_villarreal.png',
-                    golesOficialLocal: 3,
-                    golesOficialVisitante: 0,
-                    golesPorraLocal: 2,
-                    golesPorraVisitante: 0,
-                    puntos: 4,
-                  ),
-                  const Divider(height: 12, thickness: 1, color: Color(0xFFF1F5F9)),
-                  const _TarjetaResultado(
-                    equipoLocal: 'Sevilla FC',
-                    escudoLocal: 'assets/images/escudos/escudo_sevilla.png',
-                    equipoVisitante: 'Real Sociedad',
-                    escudoVisitante: 'assets/images/escudos/escudo_realsociedad.png',
-                    golesOficialLocal: 1,
-                    golesOficialVisitante: 1,
-                    golesPorraLocal: 1,
-                    golesPorraVisitante: 0,
-                    puntos: 2,
-                  ),
-                  const Divider(height: 12, thickness: 1, color: Color(0xFFF1F5F9)),
-                  const _TarjetaResultado(
-                    equipoLocal: 'Betis',
-                    escudoLocal: 'assets/images/escudos/escudo_betis.png',
-                    equipoVisitante: 'Valencia CF',
-                    escudoVisitante: 'assets/images/escudos/escudo_valencia.png',
-                    golesOficialLocal: 2,
-                    golesOficialVisitante: 1,
-                    golesPorraLocal: 1,
-                    golesPorraVisitante: 1,
-                    puntos: 0,
-                  ),
-                  const Divider(height: 12, thickness: 1, color: Color(0xFFF1F5F9)),
-                  const _TarjetaResultado(
-                    equipoLocal: 'Athletic Club',
-                    escudoLocal: 'assets/images/escudos/escudo_athletic.png',
-                    equipoVisitante: 'Celta de Vigo',
-                    escudoVisitante: 'assets/images/escudos/escudo_celta.png',
-                    golesOficialLocal: 1,
-                    golesOficialVisitante: 0,
-                    golesPorraLocal: 1,
-                    golesPorraVisitante: 0,
-                    puntos: 8,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Tarjeta resumen inferior: Total jornada +22 pts
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF8FAFC),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: const Color(0xFFE2E8F0),
+                          return Column(
+                            children: [
+                              _TarjetaResultado(
+                                partido: partido,
+                                pronostico: pronostico,
+                                puntos: pts,
+                              ),
+                              if (i < partidosJugados.length - 1)
+                                const Divider(
+                                  height: 12,
+                                  thickness: 1,
+                                  color: Color(0xFFF1F5F9),
+                                ),
+                            ],
+                          );
+                        },
                       ),
                     ),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.star,
-                          color: Color(0xFFFACC15),
-                          size: 22,
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF8FAFC),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: const Color(0xFFE2E8F0),
                         ),
-                        const SizedBox(width: 8),
-                        const Expanded(
-                          child: Text(
-                            'Total jornada',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E293B),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.star,
+                            color: Color(0xFFFACC15),
+                            size: 22,
+                          ),
+                          const SizedBox(width: 8),
+                          const Expanded(
+                            child: Text(
+                              'Total partidos jugados',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1E293B),
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFD1FAE5),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Text(
-                            '+22 pts',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF065F46),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFD1FAE5),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              '+$totalPuntos pts',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF065F46),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -211,67 +174,50 @@ class PantallaResultados extends StatelessWidget {
 }
 
 class _TarjetaResultado extends StatelessWidget {
-  final String equipoLocal;
-  final String escudoLocal;
-  final String equipoVisitante;
-  final String escudoVisitante;
-  final int golesOficialLocal;
-  final int golesOficialVisitante;
-  final int golesPorraLocal;
-  final int golesPorraVisitante;
+  final Partido partido;
+  final Pronostico? pronostico;
   final int puntos;
 
   const _TarjetaResultado({
-    required this.equipoLocal,
-    required this.escudoLocal,
-    required this.equipoVisitante,
-    required this.escudoVisitante,
-    required this.golesOficialLocal,
-    required this.golesOficialVisitante,
-    required this.golesPorraLocal,
-    required this.golesPorraVisitante,
+    required this.partido,
+    required this.pronostico,
     required this.puntos,
   });
 
   Color _colorFondoPuntos() {
-    if (puntos >= 8) {
-      return const Color(0xFFD1FAE5);
-    } else if (puntos > 0) {
-      return const Color(0xFFE0F2FE);
-    } else {
-      return const Color(0xFFFEE2E2);
-    }
+    if (pronostico == null) return const Color(0xFFF1F5F9);
+    if (puntos >= 8) return const Color(0xFFD1FAE5);
+    if (puntos > 0) return const Color(0xFFE0F2FE);
+    return const Color(0xFFFEE2E2);
   }
 
   Color _colorTextoPuntos() {
-    if (puntos >= 8) {
-      return const Color(0xFF065F46);
-    } else if (puntos > 0) {
-      return const Color(0xFF0369A1);
-    } else {
-      return const Color(0xFFB91C1C);
-    }
+    if (pronostico == null) return const Color(0xFF64748B);
+    if (puntos >= 8) return const Color(0xFF065F46);
+    if (puntos > 0) return const Color(0xFF0369A1);
+    return const Color(0xFFB91C1C);
   }
 
   Color _colorTextoPorra() {
-    if (puntos >= 4) {
-      return const Color(0xFF16A34A);
-    } else if (puntos > 0) {
-      return const Color(0xFF64748B);
-    } else {
-      return const Color(0xFFDC2626);
-    }
+    if (pronostico == null) return const Color(0xFF94A3B8);
+    if (puntos >= 4) return const Color(0xFF16A34A);
+    if (puntos > 0) return const Color(0xFF64748B);
+    return const Color(0xFFDC2626);
   }
 
   @override
   Widget build(BuildContext context) {
-    final String textoPuntos = puntos > 0 ? '+$puntos' : '0';
+    final String textoPuntos = pronostico == null
+        ? '-'
+        : (puntos > 0 ? '+$puntos' : '0');
+    final String textoPorra = pronostico == null
+        ? 'Sin pronóstico'
+        : 'Tu porra: ${pronostico!.local} - ${pronostico!.visitante}';
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          // Columna izquierda: equipos + "Tu porra"
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,16 +225,15 @@ class _TarjetaResultado extends StatelessWidget {
                 Row(
                   children: [
                     Image.asset(
-                      escudoLocal,
+                      partido.escudoLocal,
                       width: 22,
                       height: 22,
                       fit: BoxFit.contain,
-                      semanticLabel: 'Escudo de $equipoLocal',
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        equipoLocal,
+                        partido.local,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 14,
@@ -303,16 +248,15 @@ class _TarjetaResultado extends StatelessWidget {
                 Row(
                   children: [
                     Image.asset(
-                      escudoVisitante,
+                      partido.escudoVisitante,
                       width: 22,
                       height: 22,
                       fit: BoxFit.contain,
-                      semanticLabel: 'Escudo de $equipoVisitante',
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        equipoVisitante,
+                        partido.visitante,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 14,
@@ -327,7 +271,7 @@ class _TarjetaResultado extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 30),
                   child: Text(
-                    'Tu porra: $golesPorraLocal - $golesPorraVisitante',
+                    textoPorra,
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -338,12 +282,10 @@ class _TarjetaResultado extends StatelessWidget {
               ],
             ),
           ),
-
-          // Columna central: marcador oficial
           Column(
             children: [
               Text(
-                '$golesOficialLocal',
+                '${partido.golesLocal ?? 0}',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -352,7 +294,7 @@ class _TarjetaResultado extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '$golesOficialVisitante',
+                '${partido.golesVisitante ?? 0}',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -361,10 +303,7 @@ class _TarjetaResultado extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(width: 14),
-
-          // Columna derecha: insignia con los puntos obtenidos
           Container(
             width: 46,
             height: 36,

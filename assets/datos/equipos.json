@@ -1,0 +1,12 @@
+[
+  {"id": 1, "nombre": "Atlético Madrid", "iniciales": "ATM", "color": 4291696434},
+  {"id": 2, "nombre": "Real Madrid", "iniciales": "RMA", "color": 4280191205},
+  {"id": 3, "nombre": "FC Barcelona", "iniciales": "FCB", "color": 4288946248},
+  {"id": 4, "nombre": "Villarreal CF", "iniciales": "VIL", "color": 4293496840},
+  {"id": 5, "nombre": "Sevilla FC", "iniciales": "SEV", "color": 4292613180},
+  {"id": 6, "nombre": "Real Sociedad", "iniciales": "RSO", "color": 4278353326},
+  {"id": 7, "nombre": "Real Betis", "iniciales": "BET", "color": 4279282281},
+  {"id": 8, "nombre": "Valencia CF", "iniciales": "VAL", "color": 4293551628},
+  {"id": 9, "nombre": "Athletic Club", "iniciales": "ATH", "color": 4290521132},
+  {"id": 10, "nombre": "Celta de Vigo", "iniciales": "CEL", "color": 4286299881}
+]

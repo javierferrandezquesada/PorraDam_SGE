@@ -1,43 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../bienvenida/providers/alias_provider.dart';
+import 'data/partidos_local.dart';
+import 'models/partido.dart';
+import 'models/pronostico.dart';
+import 'providers/pronosticos_provider.dart';
 
-class PantallaJornadas extends StatefulWidget {
-  final String alias;
-
-  const PantallaJornadas({
-    super.key,
-    this.alias = 'Sin Usuario',
-  });
+class PantallaJornadas extends ConsumerStatefulWidget {
+  const PantallaJornadas({super.key});
 
   @override
-  State<PantallaJornadas> createState() => _PantallaJornadasState();
+  ConsumerState<PantallaJornadas> createState() => _PantallaJornadasState();
 }
 
-class _PantallaJornadasState extends State<PantallaJornadas> {
+class _PantallaJornadasState extends ConsumerState<PantallaJornadas> {
+  late final Future<List<Partido>> _futuroPartidos;
   bool _pronosticosGuardados = false;
 
-  void _alModificarPronostico() {
-    if (_pronosticosGuardados) {
-      setState(() {
-        _pronosticosGuardados = false;
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    _futuroPartidos = cargarPartidos();
   }
 
-  void _guardarPronosticos() {
+  void _guardarPronosticos(List<Partido> partidos) {
+    final mapaActual = ref.read(pronosticosProvider);
+    final notifier = ref.read(pronosticosProvider.notifier);
+
+    for (final partido in partidos) {
+      if (!mapaActual.containsKey(partido.id)) {
+        notifier.guardar(
+          Pronostico(partidoId: partido.id, local: 0, visitante: 0),
+        );
+      }
+    }
+
     setState(() {
       _pronosticosGuardados = true;
     });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Pronósticos guardados en tu porra')),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+    final String alias = ref.watch(aliasProvider);
+    final Map<int, Pronostico> pronosticos = ref.watch(pronosticosProvider);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Jornada 1',
+            'Jornadas',
             style: TextStyle(
               fontFamily: 'Boldonse',
               fontSize: 26,
@@ -47,7 +65,7 @@ class _PantallaJornadasState extends State<PantallaJornadas> {
           ),
           const SizedBox(height: 2),
           Text(
-            'Bienvenido, ${widget.alias} · Tu porra para esta jornada',
+            'Bienvenido, $alias · Tu porra para esta temporada',
             style: const TextStyle(
               fontFamily: 'HostGrotesk',
               fontSize: 13,
@@ -64,7 +82,7 @@ class _PantallaJornadasState extends State<PantallaJornadas> {
               ),
               const SizedBox(width: 6),
               Text(
-                'Se cierra el: Sáb 12 oct · 16:00',
+                'Toca + o - para escribir tu pronóstico',
                 style: TextStyle(
                   fontFamily: 'HostGrotesk',
                   fontSize: 12,
@@ -74,92 +92,125 @@ class _PantallaJornadasState extends State<PantallaJornadas> {
             ],
           ),
           const SizedBox(height: 16),
-          Card(
-            color: Colors.white,
-            elevation: 4,
-            margin: EdgeInsets.zero,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  _TarjetaPartido(
-                    equipoLocal: 'Atlético Madrid',
-                    escudoLocal: 'assets/images/escudos/escudo_atletico.png',
-                    equipoVisitante: 'Real Madrid',
-                    escudoVisitante: 'assets/images/escudos/escudo_madrid.png',
-                    golesLocalInicial: 2,
-                    golesVisitanteInicial: 1,
-                    onCambio: _alModificarPronostico,
-                  ),
-                  const Divider(height: 12, thickness: 1, color: Color(0xFFF1F5F9)),
-                  _TarjetaPartido(
-                    equipoLocal: 'FC Barcelona',
-                    escudoLocal: 'assets/images/escudos/escudo_barcelona.png',
-                    equipoVisitante: 'Villarreal CF',
-                    escudoVisitante: 'assets/images/escudos/escudo_villarreal.png',
-                    golesLocalInicial: 3,
-                    golesVisitanteInicial: 0,
-                    onCambio: _alModificarPronostico,
-                  ),
-                  const Divider(height: 12, thickness: 1, color: Color(0xFFF1F5F9)),
-                  _TarjetaPartido(
-                    equipoLocal: 'Sevilla FC',
-                    escudoLocal: 'assets/images/escudos/escudo_sevilla.png',
-                    equipoVisitante: 'Real Sociedad',
-                    escudoVisitante: 'assets/images/escudos/escudo_realsociedad.png',
-                    golesLocalInicial: 1,
-                    golesVisitanteInicial: 1,
-                    onCambio: _alModificarPronostico,
-                  ),
-                  const Divider(height: 12, thickness: 1, color: Color(0xFFF1F5F9)),
-                  _TarjetaPartido(
-                    equipoLocal: 'Betis',
-                    escudoLocal: 'assets/images/escudos/escudo_betis.png',
-                    equipoVisitante: 'Valencia CF',
-                    escudoVisitante: 'assets/images/escudos/escudo_valencia.png',
-                    golesLocalInicial: 2,
-                    golesVisitanteInicial: 1,
-                    onCambio: _alModificarPronostico,
-                  ),
-                  const Divider(height: 12, thickness: 1, color: Color(0xFFF1F5F9)),
-                  _TarjetaPartido(
-                    equipoLocal: 'Athletic Club',
-                    escudoLocal: 'assets/images/escudos/escudo_athletic.png',
-                    equipoVisitante: 'Celta de Vigo',
-                    escudoVisitante: 'assets/images/escudos/escudo_celta.png',
-                    golesLocalInicial: 1,
-                    golesVisitanteInicial: 0,
-                    onCambio: _alModificarPronostico,
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: _guardarPronosticos,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _pronosticosGuardados
-                            ? const Color(0xFF10B981)
-                            : Colors.black,
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        shape: const StadiumBorder(),
-                      ),
-                      child: Text(
-                        _pronosticosGuardados
-                            ? 'Pronósticos guardados'
-                            : 'Guardar pronósticos',
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
+          Expanded(
+            child: Card(
+              color: Colors.white,
+              elevation: 4,
+              margin: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: FutureBuilder<List<Partido>>(
+                  future: _futuroPartidos,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error al cargar partidos: ${snapshot.error}'),
+                      );
+                    }
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    final List<Partido> partidos = snapshot.data!;
+
+                    return Column(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: partidos.length,
+                            itemBuilder: (context, i) {
+                              final partido = partidos[i];
+                              final pronostico = pronosticos[partido.id];
+                              final golesLocal = pronostico?.local ?? 0;
+                              final golesVisitante = pronostico?.visitante ?? 0;
+
+                              return Column(
+                                children: [
+                                  _TarjetaPartido(
+                                    partido: partido,
+                                    golesLocal: golesLocal,
+                                    golesVisitante: golesVisitante,
+                                    tienePronostico: pronostico != null,
+                                    onCambiarLocal: (nuevoLocal) {
+                                      ref
+                                          .read(pronosticosProvider.notifier)
+                                          .guardar(
+                                        Pronostico(
+                                          partidoId: partido.id,
+                                          local: nuevoLocal,
+                                          visitante: golesVisitante,
+                                        ),
+                                      );
+                                      if (_pronosticosGuardados) {
+                                        setState(() => _pronosticosGuardados = false);
+                                      }
+                                    },
+                                    onCambiarVisitante: (nuevoVisitante) {
+                                      ref
+                                          .read(pronosticosProvider.notifier)
+                                          .guardar(
+                                        Pronostico(
+                                          partidoId: partido.id,
+                                          local: golesLocal,
+                                          visitante: nuevoVisitante,
+                                        ),
+                                      );
+                                      if (_pronosticosGuardados) {
+                                        setState(() => _pronosticosGuardados = false);
+                                      }
+                                    },
+                                    onBorrar: () {
+                                      ref
+                                          .read(pronosticosProvider.notifier)
+                                          .borrar(partido.id);
+                                      if (_pronosticosGuardados) {
+                                        setState(() => _pronosticosGuardados = false);
+                                      }
+                                    },
+                                  ),
+                                  if (i < partidos.length - 1)
+                                    const Divider(
+                                      height: 12,
+                                      thickness: 1,
+                                      color: Color(0xFFF1F5F9),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                ],
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 48,
+                          child: ElevatedButton(
+                            onPressed: () => _guardarPronosticos(partidos),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _pronosticosGuardados
+                                  ? const Color(0xFF10B981)
+                                  : Colors.black,
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              shape: const StadiumBorder(),
+                            ),
+                            child: Text(
+                              _pronosticosGuardados
+                                  ? 'Pronósticos guardados'
+                                  : 'Guardar pronósticos',
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -169,53 +220,24 @@ class _PantallaJornadasState extends State<PantallaJornadas> {
   }
 }
 
-class _TarjetaPartido extends StatefulWidget {
-  final String equipoLocal;
-  final String escudoLocal;
-  final String equipoVisitante;
-  final String escudoVisitante;
-  final int golesLocalInicial;
-  final int golesVisitanteInicial;
-  final VoidCallback? onCambio;
+class _TarjetaPartido extends StatelessWidget {
+  final Partido partido;
+  final int golesLocal;
+  final int golesVisitante;
+  final bool tienePronostico;
+  final ValueChanged<int> onCambiarLocal;
+  final ValueChanged<int> onCambiarVisitante;
+  final VoidCallback onBorrar;
 
   const _TarjetaPartido({
-    required this.equipoLocal,
-    required this.escudoLocal,
-    required this.equipoVisitante,
-    required this.escudoVisitante,
-    required this.golesLocalInicial,
-    required this.golesVisitanteInicial,
-    this.onCambio,
+    required this.partido,
+    required this.golesLocal,
+    required this.golesVisitante,
+    required this.tienePronostico,
+    required this.onCambiarLocal,
+    required this.onCambiarVisitante,
+    required this.onBorrar,
   });
-
-  @override
-  State<_TarjetaPartido> createState() => _TarjetaPartidoState();
-}
-
-class _TarjetaPartidoState extends State<_TarjetaPartido> {
-  late int _golesLocal;
-  late int _golesVisitante;
-
-  @override
-  void initState() {
-    super.initState();
-    _golesLocal = widget.golesLocalInicial;
-    _golesVisitante = widget.golesVisitanteInicial;
-  }
-
-  void _cambiarGolesLocal(int nuevosGoles) {
-    setState(() {
-      _golesLocal = nuevosGoles;
-    });
-    widget.onCambio?.call();
-  }
-
-  void _cambiarGolesVisitante(int nuevosGoles) {
-    setState(() {
-      _golesVisitante = nuevosGoles;
-    });
-    widget.onCambio?.call();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -223,18 +245,66 @@ class _TarjetaPartidoState extends State<_TarjetaPartido> {
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Column(
         children: [
+          Row(
+            children: [
+              Text(
+                'Jornada ${partido.jornada}',
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF64748B),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: tienePronostico
+                      ? const Color(0xFFD1FAE5)
+                      : const Color(0xFFF1F5F9),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  tienePronostico
+                      ? 'Pronosticado: $golesLocal - $golesVisitante'
+                      : 'Sin pronóstico',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: tienePronostico
+                        ? const Color(0xFF065F46)
+                        : const Color(0xFF64748B),
+                  ),
+                ),
+              ),
+              const Spacer(),
+              if (tienePronostico)
+                InkWell(
+                  onTap: onBorrar,
+                  child: const Padding(
+                    padding: EdgeInsets.all(4),
+                    child: Icon(
+                      Icons.delete_outline,
+                      size: 18,
+                      color: Color(0xFFDC2626),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 6),
           _FilaEquipo(
-            nombre: widget.equipoLocal,
-            rutaEscudo: widget.escudoLocal,
-            goles: _golesLocal,
-            onGolesChanged: _cambiarGolesLocal,
+            nombre: partido.local,
+            rutaEscudo: partido.escudoLocal,
+            goles: golesLocal,
+            onGolesChanged: onCambiarLocal,
           ),
           const SizedBox(height: 4),
           _FilaEquipo(
-            nombre: widget.equipoVisitante,
-            rutaEscudo: widget.escudoVisitante,
-            goles: _golesVisitante,
-            onGolesChanged: _cambiarGolesVisitante,
+            nombre: partido.visitante,
+            rutaEscudo: partido.escudoVisitante,
+            goles: golesVisitante,
+            onGolesChanged: onCambiarVisitante,
           ),
         ],
       ),

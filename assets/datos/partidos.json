@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "jornada": 1,
+    "local": "Atlético Madrid",
+    "escudoLocal": "assets/images/escudos/escudo_atletico.png",
+    "visitante": "Real Madrid",
+    "escudoVisitante": "assets/images/escudos/escudo_madrid.png",
+    "golesLocal": 2,
+    "golesVisitante": 1
+  },
+  {
+    "id": 2,
+    "jornada": 1,
+    "local": "FC Barcelona",
+    "escudoLocal": "assets/images/escudos/escudo_barcelona.png",
+    "visitante": "Villarreal CF",
+    "escudoVisitante": "assets/images/escudos/escudo_villarreal.png",
+    "golesLocal": 3,
+    "golesVisitante": 0
+  },
+  {
+    "id": 3,
+    "jornada": 1,
+    "local": "Sevilla FC",
+    "escudoLocal": "assets/images/escudos/escudo_sevilla.png",
+    "visitante": "Real Sociedad",
+    "escudoVisitante": "assets/images/escudos/escudo_realsociedad.png",
+    "golesLocal": 1,
+    "golesVisitante": 1
+  },
+  {
+    "id": 4,
+    "jornada": 1,
+    "local": "Betis",
+    "escudoLocal": "assets/images/escudos/escudo_betis.png",
+    "visitante": "Valencia CF",
+    "escudoVisitante": "assets/images/escudos/escudo_valencia.png",
+    "golesLocal": 2,
+    "golesVisitante": 1
+  },
+  {
+    "id": 5,
+    "jornada": 1,
+    "local": "Athletic Club",
+    "escudoLocal": "assets/images/escudos/escudo_athletic.png",
+    "visitante": "Celta de Vigo",
+    "escudoVisitante": "assets/images/escudos/escudo_celta.png",
+    "golesLocal": 1,
+    "golesVisitante": 0
+  },
+  {
+    "id": 6,
+    "jornada": 2,
+    "local": "Real Madrid",
+    "escudoLocal": "assets/images/escudos/escudo_madrid.png",
+    "visitante": "FC Barcelona",
+    "escudoVisitante": "assets/images/escudos/escudo_barcelona.png",
+    "golesLocal": null,
+    "golesVisitante": null
+  },
+  {
+    "id": 7,
+    "jornada": 2,
+    "local": "Villarreal CF",
+    "escudoLocal": "assets/images/escudos/escudo_villarreal.png",
+    "visitante": "Atlético Madrid",
+    "escudoVisitante": "assets/images/escudos/escudo_atletico.png",
+    "golesLocal": null,
+    "golesVisitante": null
+  }
+]

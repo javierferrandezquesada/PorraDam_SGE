@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import '../principal/pantalla_principal.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'providers/alias_provider.dart';
 
-class PantallaBienvenida extends StatefulWidget {
+class PantallaBienvenida extends ConsumerStatefulWidget {
   const PantallaBienvenida({super.key});
 
   @override
-  State<PantallaBienvenida> createState() => _PantallaBienvenidaState();
+  ConsumerState<PantallaBienvenida> createState() => _PantallaBienvenidaState();
 }
 
-class _PantallaBienvenidaState extends State<PantallaBienvenida> {
+class _PantallaBienvenidaState extends ConsumerState<PantallaBienvenida> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _aliasController = TextEditingController();
   final TextEditingController _grupoController = TextEditingController();
 
@@ -20,16 +23,10 @@ class _PantallaBienvenidaState extends State<PantallaBienvenida> {
   }
 
   void _entrarEnLaPorra() {
-    final String alias = _aliasController.text.trim().isEmpty
-        ? 'Sin Usuario'
-        : _aliasController.text.trim();
+    if (!_formKey.currentState!.validate()) return;
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PantallaPrincipal(alias: alias),
-      ),
-    );
+    ref.read(aliasProvider.notifier).cambiar(_aliasController.text);
+    context.go('/jornadas');
   }
 
   @override
@@ -88,74 +85,86 @@ class _PantallaBienvenidaState extends State<PantallaBienvenida> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'TU ALIAS',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          TextField(
-                            controller: _aliasController,
-                            decoration: InputDecoration(
-                              hintText: 'Escribe tu nombre o alias',
-                              prefixIcon: const Icon(Icons.person_outline),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'TU ALIAS',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          const Text(
-                            'CÓDIGO DEL GRUPO',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          TextField(
-                            controller: _grupoController,
-                            decoration: InputDecoration(
-                              hintText: 'p. ej. 1A - DAM - 2026',
-                              prefixIcon: const Icon(Icons.people_outline),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                            const SizedBox(height: 6),
+                            TextFormField(
+                              controller: _aliasController,
+                              validator: (valor) {
+                                if (valor == null || valor.trim().isEmpty) {
+                                  return 'Introduce tu nombre o alias para entrar';
+                                }
+                                if (valor.trim().length < 2) {
+                                  return 'El alias debe tener al menos 2 caracteres';
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                hintText: 'Escribe tu nombre o alias',
+                                prefixIcon: const Icon(Icons.person_outline),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          SizedBox(
-                            width: double.infinity,
-                            height: 48,
-                            child: ElevatedButton(
-                              onPressed: _entrarEnLaPorra,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                foregroundColor: Colors.white,
-                                shape: const StadiumBorder(),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'CÓDIGO DEL GRUPO',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
                               ),
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Entrar en la porra',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
+                            ),
+                            const SizedBox(height: 6),
+                            TextFormField(
+                              controller: _grupoController,
+                              decoration: InputDecoration(
+                                hintText: 'p. ej. 1A - DAM - 2026',
+                                prefixIcon: const Icon(Icons.people_outline),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 48,
+                              child: ElevatedButton(
+                                onPressed: _entrarEnLaPorra,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black,
+                                  foregroundColor: Colors.white,
+                                  shape: const StadiumBorder(),
+                                ),
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Entrar en la porra',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Icon(Icons.arrow_forward),
-                                ],
+                                    SizedBox(width: 8),
+                                    Icon(Icons.arrow_forward),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
